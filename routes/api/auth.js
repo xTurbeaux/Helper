@@ -26,8 +26,9 @@ router.get('/', auth, async (req, res) => {
 // @access   Public
 router.post(
   '/',
-  [check('email', 'Please include a valid email').isEmail(),
-  check('password', 'Password is required').exists()
+  [
+    check('email', 'Please include a valid email').isEmail(),
+    check('password', 'Password is required').exists()
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -46,7 +47,6 @@ router.post(
           .json({ errors: [{ msg: 'Invalid Credendials' }] });
       }
 
-      
       const isMatch = await bcrypt.compare(password, user.password);
 
       if (!isMatch) {
@@ -54,7 +54,7 @@ router.post(
           .status(400)
           .json({ errors: [{ msg: 'Invalid Credendials' }] });
       }
-      
+
       const payload = {
         user: {
           id: user.id // mongoose makes _id not needed from mongoDB
